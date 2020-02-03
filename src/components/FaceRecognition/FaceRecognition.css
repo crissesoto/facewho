@@ -1,0 +1,12 @@
+.imgDiv{
+    position: relative;
+}
+
+.boudingBox{
+    position: absolute;
+    box-shadow: 0 0 0 3px #d5eefd inset;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    cursor: pointer;
+}

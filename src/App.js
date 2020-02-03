@@ -3,6 +3,7 @@ import Navigation from './components/Navigation/Navigation';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Particles from 'react-particles-js';
 import Rank from './components/Rank/Rank';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import { MDBContainer} from "mdbreact";
 
 // initialize with your api key. 
@@ -17,31 +18,57 @@ class App extends Component {
     super();
     this.state = {
       input: '',
+      imgUrl:'',
+      box: {},
     }
   }
   
   // create func to pass as para to ImageLinkForm
-  onInputChange = (event) => {
-    console.log(event.target.value);
+
+  calculateFaceLocation = (data) =>{
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+
+    // dom
+    const inputImage = document.getElementById("inputImage");
+    const width =  Number(inputImage.width);
+    const height =  Number(inputImage.height);
+
+    // regions of the box is % of the img
+    return {
+      leftCol: clarifaiFace.left_col * width,
+      topRow: clarifaiFace.top_row * height,
+      rightCol: (width - (clarifaiFace.right_col * width)),
+      bottomRow: (height - (clarifaiFace.bottom_row * height))
+    }
+  };
+
+  displayFaceBox = (box) =>{
+    this.setState({box: box});
+    console.log("box:", box)
   }
 
+  onInputChange = (event) => {
+    this.setState({input: event.target.value});
+  };
+
   onButtonSubmit = () => {
-    app.models.predict("a403429f2ddf4b49b307e318f00e528b", "https://samples.clarifai.com/face-det.jpg").then(
-      function(response) {
-        // do something with response
-        console.log(response);
-      },
-      function(err) {
-        // there was an error
-        console.log("oooops!", err);
-      }
-    );
-  }
+    this.setState({imgUrl: this.state.input});
+    app.models
+    .predict(
+      Clarifai.FACE_DETECT_MODEL,
+      this.state.input)
+      .then(response => {
+        this.displayFaceBox(this.calculateFaceLocation(response))
+        console.log(response.outputs[0].data.regions[0].region_info.bounding_box)
+      }).catch(err =>{
+        console.log(err)
+      })
+  };
 
 
   render(){
     return (
-      <div>
+      <div className="h-100">
         <Particles
           
           params={{
@@ -80,6 +107,9 @@ class App extends Component {
             onInputChange = {this.onInputChange} 
             onButtonSubmit={this.onButtonSubmit}
             />
+            <FaceRecognition imgUrl={this.state.imgUrl} box={this.state.box} />
+
+
         </MDBContainer>
       </div>
     );
