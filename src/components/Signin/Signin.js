@@ -12,7 +12,7 @@ import {
   MDBModalFooter
 } from "mdbreact";
 
-const Signin = () => {
+const Signin = ({onRouteChange}) => {
   return (
     <MDBContainer >
       <MDBRow center className="mt-5">
@@ -46,9 +46,11 @@ const Signin = () => {
 
               <div className="text-center mt-4">
                 <MDBBtn
-                  color="default"
-                  className="mb-3"
-                  type="submit"
+                    onClick={() =>{onRouteChange('home')}}
+                    color="default"
+                    className="mb-3"
+                    type="submit"
+                    value="signin"
                 >
                   Login
                 </MDBBtn>
@@ -56,7 +58,11 @@ const Signin = () => {
               </form>
               <MDBModalFooter>
                 <div className="font-weight-light">
-                  <a href="!#">Not a member? Sign Up</a>
+                  <p
+                    style={{cursor: 'pointer' }}       
+                    onClick={() =>{onRouteChange('register')}}
+                    >Not a member? Sign Up
+                  </p>
                 </div>
               </MDBModalFooter>
             </MDBCardBody>

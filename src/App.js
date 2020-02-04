@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Navigation from './components/Navigation/Navigation';
 import Signin from './components/Signin/Signin';
+import Register from './components/Register/Register';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Particles from 'react-particles-js';
 import Rank from './components/Rank/Rank';
@@ -65,7 +66,11 @@ class App extends Component {
         console.log(err)
       })
   };
-
+  // route change func
+  onRouteChange = (route) =>{
+    this.setState({route: route});
+  }
+  
 
   render(){
     return (
@@ -101,18 +106,23 @@ class App extends Component {
 
         />
         <Navigation /> 
-        { this.state.route === "signin" 
-          ? <Signin />
-          : <MDBContainer className="text-center font-weight-bold">
-              <Rank />
-              <ImageLinkForm  
-              onInputChange = {this.onInputChange} 
-              onButtonSubmit={this.onButtonSubmit}
-              />
-              <FaceRecognition imgUrl={this.state.imgUrl} box={this.state.box} />
+
+        { this.state.route === "home"
+          ? <MDBContainer className="text-center font-weight-bold">
+                <Rank onRouteChange={this.onRouteChange}/>
+                <ImageLinkForm  
+                onInputChange = {this.onInputChange} 
+                onButtonSubmit={this.onButtonSubmit}
+                />
+                <FaceRecognition imgUrl={this.state.imgUrl} box={this.state.box} />
 
 
             </MDBContainer>
+          : (
+            this.state.route === "signin"
+          ? <Signin onRouteChange={this.onRouteChange} />
+          : <Register onRouteChange={this.onRouteChange} />
+          )
         }
       </div>
     );
