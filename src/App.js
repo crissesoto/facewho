@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Navigation from './components/Navigation/Navigation';
+import Signin from './components/Signin/Signin';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Particles from 'react-particles-js';
 import Rank from './components/Rank/Rank';
@@ -20,6 +21,7 @@ class App extends Component {
       input: '',
       imgUrl:'',
       box: {},
+      route: 'signin'
     }
   }
   
@@ -44,14 +46,13 @@ class App extends Component {
 
   displayFaceBox = (box) =>{
     this.setState({box: box});
-    console.log("box:", box)
   }
 
   onInputChange = (event) => {
     this.setState({input: event.target.value});
   };
 
-  onButtonSubmit = () => {
+  onButtonSubmit = (e) => {
     this.setState({imgUrl: this.state.input});
     app.models
     .predict(
@@ -100,17 +101,19 @@ class App extends Component {
 
         />
         <Navigation /> 
+        { this.state.route === "signin" 
+          ? <Signin />
+          : <MDBContainer className="text-center font-weight-bold">
+              <Rank />
+              <ImageLinkForm  
+              onInputChange = {this.onInputChange} 
+              onButtonSubmit={this.onButtonSubmit}
+              />
+              <FaceRecognition imgUrl={this.state.imgUrl} box={this.state.box} />
 
-        <MDBContainer className="text-center font-weight-bold">
-            <Rank />
-            <ImageLinkForm  
-            onInputChange = {this.onInputChange} 
-            onButtonSubmit={this.onButtonSubmit}
-            />
-            <FaceRecognition imgUrl={this.state.imgUrl} box={this.state.box} />
 
-
-        </MDBContainer>
+            </MDBContainer>
+        }
       </div>
     );
   }
