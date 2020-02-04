@@ -7,10 +7,10 @@ let styleConfig = {width: 75 + "%"};
 const ImageLinkForm = ({onInputChange, onButtonSubmit}) => {
     return (
           <div id="imageForm" m-auto="true" style={{height: 130 + "px"}}>
-            <form  className="form-inline m-auto w-50 d-flex justify-content-center">
+            <div  className="form-inline m-auto w-50 d-flex justify-content-center">
                 <input onChange={onInputChange}  style={styleConfig} type="text" placeholder="Scan picture" className="form-control text-center"  />
                 <MDBBtn onClick={onButtonSubmit} className="text-center ">Scan</MDBBtn> 
-            </form>
+            </div>
           </div>
       );
 }

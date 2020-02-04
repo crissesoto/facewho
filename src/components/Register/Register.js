@@ -8,7 +8,7 @@ const Register = ({onRouteChange}) => {
         <MDBCol md="6">
           <MDBCard>
             <MDBCardBody>
-              <form>
+              <div>
                 <p className="h4 text-center py-4">Sign up</p>
                 <div className="grey-text">
                   <MDBInput
@@ -48,7 +48,7 @@ const Register = ({onRouteChange}) => {
                 </div>
                 <div className="text-center py-4 mt-3">
                   <MDBBtn 
-                    onClick={() =>{onRouteChange('sigin')}}
+                    onClick={() =>{onRouteChange('signin')}}
                     color="cyan" 
                     type="submit"
                     value="register"
@@ -56,7 +56,7 @@ const Register = ({onRouteChange}) => {
                     Register
                   </MDBBtn>
                 </div>
-              </form>
+              </div>
             </MDBCardBody>
           </MDBCard>
         </MDBCol>

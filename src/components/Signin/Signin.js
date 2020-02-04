@@ -24,7 +24,7 @@ const Signin = ({onRouteChange}) => {
                   <MDBIcon icon="lock" /> Login:
                 </h3>
               </MDBCardHeader>
-              <form>
+              <div>
                 <div className="grey-text">
                   <MDBInput
                     label="Type your email"
@@ -55,7 +55,7 @@ const Signin = ({onRouteChange}) => {
                   Login
                 </MDBBtn>
               </div>
-              </form>
+              </div>
               <MDBModalFooter>
                 <div className="font-weight-light">
                   <p
