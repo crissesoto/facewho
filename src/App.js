@@ -22,10 +22,30 @@ class App extends Component {
       input: '',
       imgUrl:'',
       box: {},
-      route: 'signin'
-    }
+      route: 'signin',
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+    },
+    };
+  };
+
+
+  // create func to update user profile
+  loadUser = (data) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }})
   }
-  
+
+
   // create func to pass as para to ImageLinkForm
 
   calculateFaceLocation = (data) =>{
@@ -53,15 +73,27 @@ class App extends Component {
     this.setState({input: event.target.value});
   };
 
-  onButtonSubmit = (e) => {
+  onPictureSubmit = (e) => {
     this.setState({imgUrl: this.state.input});
     app.models
     .predict(
       Clarifai.FACE_DETECT_MODEL,
       this.state.input)
       .then(response => {
-        this.displayFaceBox(this.calculateFaceLocation(response))
-        console.log(response.outputs[0].data.regions[0].region_info.bounding_box)
+        if(response){
+          fetch('http://localhost:4000/image', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          })
+          .then(response => response.json())
+          .then(count => {
+            this.setState(Object.assign(this.state.user, {entries: count}));
+          })
+          this.displayFaceBox(this.calculateFaceLocation(response));
+        }
       }).catch(err =>{
         console.log(err)
       })
@@ -109,10 +141,10 @@ class App extends Component {
 
         { this.state.route === "home"
           ? <MDBContainer className="text-center font-weight-bold">
-                <Rank onRouteChange={this.onRouteChange}/>
+                <Rank onRouteChange={this.onRouteChange} name={this.state.user.name} entries={this.state.user.entries}/>
                 <ImageLinkForm  
                 onInputChange = {this.onInputChange} 
-                onButtonSubmit={this.onButtonSubmit}
+                onPictureSubmit={this.onPictureSubmit}
                 />
                 <FaceRecognition imgUrl={this.state.imgUrl} box={this.state.box} />
 
@@ -120,8 +152,8 @@ class App extends Component {
             </MDBContainer>
           : (
             this.state.route === "signin"
-          ? <Signin onRouteChange={this.onRouteChange} />
-          : <Register onRouteChange={this.onRouteChange} />
+          ? <Signin onRouteChange={this.onRouteChange}  loadUser={this.loadUser} />
+          : <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
           )
         }
       </div>

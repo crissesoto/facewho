@@ -3,7 +3,7 @@ import "./Rank";
 import { MDBBtn} from "mdbreact";
 
 
-const Rank = ({onRouteChange}) => {
+const Rank = ({onRouteChange, name, entries}) => {
     return (    
                 <Fragment>
                     <MDBBtn
@@ -14,8 +14,8 @@ const Rank = ({onRouteChange}) => {
                         value="home"
                         >Logout
                     </MDBBtn>
-                    <h1 className="mt-5">Crisse, your rank is...</h1>
-                    <h1>#</h1>
+                    <h1 className="mt-5">Hello {name}, your rank is...</h1>
+                    <h1>#{entries}</h1>
                     <p className=" m-3"> Insert a picture to detect a face.</p>
                 </Fragment>
     )
