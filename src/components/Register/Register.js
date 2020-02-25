@@ -37,7 +37,7 @@ class Register extends Component {
   };
 
   onSubmitRegister = () => {
-    fetch('http://localhost:4000/register', {
+    fetch('https://blooming-plateau-74830.herokuapp.com/register', {
       method: 'POST',
       //mode: 'cors',
       headers: {'Content-Type': 'application/json'},

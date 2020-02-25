@@ -74,7 +74,7 @@ class App extends Component {
 
   onPictureSubmit = (e) => {
     this.setState({imgUrl: this.state.input});
-    fetch('http://localhost:4000/imageUrl', {
+    fetch('https://blooming-plateau-74830.herokuapp.com/imageUrl', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -84,7 +84,7 @@ class App extends Component {
     .then(response => response.json())
     .then(response => {
       if(response){
-        fetch('http://localhost:4000/image', {
+        fetch('https://blooming-plateau-74830.herokuapp.com/image', {
           method: 'PUT',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
