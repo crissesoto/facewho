@@ -3,11 +3,12 @@ import "./Rank";
 import { MDBBtn} from "mdbreact";
 
 
-const Rank = ({onRouteChange, name, entries}) => {
+const Rank = ({onRouteChange, onLogout, name, entries}) => {
     return (    
                 <Fragment>
                     <MDBBtn
-                        onClick={() =>{onRouteChange('signin')}}
+                        onClick={() =>{onRouteChange('signin'); onLogout()}}
+                        //onClick={() => {onLogout()}}
                         color="default"
                         className="mb-3 d-flex ml-auto"
                         type="submit"

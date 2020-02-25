@@ -8,29 +8,28 @@ import Rank from './components/Rank/Rank';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import { MDBContainer} from "mdbreact";
 
-// initialize with your api key. 
-import Clarifai from 'clarifai';
-const app = new Clarifai.App({
-  apiKey: '40a4c9f4fa9f4cf2987ac1468de6b445'
- });
+
+
+ // inital state for the user info
+ const initalState = {
+  input: '',
+  imgUrl:'',
+  box: {},
+  route: 'signin',
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: ''
+},
+};
  
 class App extends Component {
   // create state with a constructor
   constructor(){
     super();
-    this.state = {
-      input: '',
-      imgUrl:'',
-      box: {},
-      route: 'signin',
-      user: {
-        id: '',
-        name: '',
-        email: '',
-        entries: 0,
-        joined: ''
-    },
-    };
+    this.state = initalState;
   };
 
 
@@ -75,32 +74,40 @@ class App extends Component {
 
   onPictureSubmit = (e) => {
     this.setState({imgUrl: this.state.input});
-    app.models
-    .predict(
-      Clarifai.FACE_DETECT_MODEL,
-      this.state.input)
-      .then(response => {
-        if(response){
-          fetch('http://localhost:4000/image', {
-            method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              id: this.state.user.id
-            })
-          })
-          .then(response => response.json())
-          .then(count => {
-            this.setState(Object.assign(this.state.user, {entries: count}));
-          })
-          this.displayFaceBox(this.calculateFaceLocation(response));
-        }
-      }).catch(err =>{
-        console.log(err)
+    fetch('http://localhost:4000/imageUrl', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        input: this.state.input
       })
+    })
+    .then(response => response.json())
+    .then(response => {
+      if(response){
+        fetch('http://localhost:4000/image', {
+          method: 'PUT',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            id: this.state.user.id
+          })
+        })
+        .then(response => response.json())
+        .then(count => {
+          this.setState(Object.assign(this.state.user, {entries: count}));
+        })
+        this.displayFaceBox(this.calculateFaceLocation(response));
+      }
+    }).catch(err =>{
+      console.log(err)
+    })
   };
   // route change func
   onRouteChange = (route) =>{
     this.setState({route: route});
+  }
+
+  onLogout = () =>{
+    this.setState({  input: '', imgUrl:'', box: {}})
   }
   
 
@@ -141,7 +148,7 @@ class App extends Component {
 
         { this.state.route === "home"
           ? <MDBContainer className="text-center font-weight-bold">
-                <Rank onRouteChange={this.onRouteChange} name={this.state.user.name} entries={this.state.user.entries}/>
+                <Rank onRouteChange={this.onRouteChange} onLogout={this.onLogout} name={this.state.user.name} entries={this.state.user.entries}/>
                 <ImageLinkForm  
                 onInputChange = {this.onInputChange} 
                 onPictureSubmit={this.onPictureSubmit}

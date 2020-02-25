@@ -49,10 +49,11 @@ class Register extends Component {
 
       }),
     }).then(response => response.json())
-    .then(data => {
-      console.log(data)
+    .then(user => {
       // check if passw is identical
-      if(data.password === this.state.registerConfPassword){
+      if(user.id){
+        // upload user profile data
+        this.props.loadUser(user);
         // redirect to home
         this.props.onRouteChange('home');
       }
